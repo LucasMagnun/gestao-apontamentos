@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,110 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relacionamento: vários projetos para um cliente
+  customerId  Int
+  customer    Customer      @relation(fields: [customerId], references: [id])
+
+  // Relacionamento: vários recursos para vários projetos (muitos-para-muitos implícito)
+  resources   Resource[]
+
+  // Relacionamento: um projeto para várias tarefas
+  tasks       Task[]
+
+  // Relacionamento: um projeto para vários dias de trabalho
+  dayOfWork   DayOfWork[]
+
+  // Relacionamento: um projeto para vários apontamentos
+  notes       Note[]
+
+  @@map("projects")
+}
+
+model Customer {
+  id          Int            @id @default(autoincrement())
+  name        String
+  email       String         @unique
+  phone       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Relacionamento: um cliente para vários projetos
+  projects    Project[]
+
+  @@map("customers")
+}
+
+model Resource {
+  id          Int              @id @default(autoincrement())
+  name        String
+  type        String           // Exemplo: equipamento, humano, etc.
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relacionamento: um recurso pode estar relacionado a vários projetos (muitos-para-muitos implícito)
+  projects    Project[]
+
+  @@map("resources")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  status      String    // Exemplo: "Pendente", "Concluída", etc.
+  projectId   Int
+  project     Project   @relation(fields: [projectId], references: [id])
+
+  // Relacionamento: uma tarefa para vários dias de trabalho
+  dayOfWork   DayOfWork[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("tasks")
+}
+
+model DayOfWork {
+  id          Int       @id @default(autoincrement())
+  date        DateTime
+  hoursWorked Int
+  projectId   Int
+  project     Project   @relation(fields: [projectId], references: [id])
+
+  // Relacionamento: um dia de trabalho para várias notas
+  notes       Note[]
+
+  // Relacionamento: um dia de trabalho pertence a uma tarefa
+  taskId      Int
+  task        Task      @relation(fields: [taskId], references: [id])
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("days_of_work")
+}
+
+model Note {
+  id          Int       @id @default(autoincrement())
+  content     String
+  createdAt   DateTime  @default(now())
+
+  // Relacionamento: uma nota pertence a um dia de trabalho
+  dayOfWorkId Int
+  dayOfWork   DayOfWork @relation(fields: [dayOfWorkId], references: [id])
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@map("notes")
 }
