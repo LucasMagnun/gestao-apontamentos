@@ -7,6 +7,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id          Int           @id @default(autoincrement())
+  name        String
+  password    String
+  email       String
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  companyId  Int
+  company    Company      @relation(fields: [companyId], references: [id])
+
+  resources   Resource[]
+
+
+  @@map("user")
+}
+
+model Company {
+  id          Int           @id @default(autoincrement())
+  name        String
+  password    String
+  email       String
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  companyId  Int
+
+  user   User[]
+
+
+  @@map("company")
+}
 model Project {
   id          Int           @id @default(autoincrement())
   name        String
@@ -56,8 +90,11 @@ model Resource {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
+  userId Int
+  user    User      @relation(fields: [userId], references: [id])
   // Relacionamento: um recurso pode estar relacionado a vários projetos (muitos-para-muitos implícito)
   projects    Project[]
+
 
   @@map("resources")
 }
