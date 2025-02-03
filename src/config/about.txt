@@ -1,0 +1,3 @@
+Configurações e ambientes (ex.: configuração de banco de dados, variáveis de ambiente)
+
+Centraliza a configuração da aplicação, como variáveis de ambiente, conexão com banco de dados e outros parâmetros que podem variar conforme o ambiente (desenvolvimento, teste, produção).

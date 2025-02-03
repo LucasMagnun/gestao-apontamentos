@@ -1,0 +1,3 @@
+Módulos e utilitários compartilhados entre diversos módulos (ex.: constantes, serviços comuns)
+
+Essa pasta contém recursos que serão utilizados por múltiplos módulos, como funções utilitárias, constantes e outros serviços genéricos.

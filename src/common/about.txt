@@ -1,0 +1,3 @@
+Recursos compartilhados (ex.: filtros, pipes, guards, interceptors, decorators)
+
+Armazena recursos que podem ser reutilizados em diversos pontos do projeto, como filtros de exceção, pipes de validação, guards de autenticação/autorização, interceptors para manipulação de requisições/respostas e decorators customizados.
