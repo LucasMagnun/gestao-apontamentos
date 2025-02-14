@@ -12,7 +12,6 @@ model User {
   name        String
   password    String
   email       String
-
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
@@ -27,14 +26,17 @@ model User {
 
 model Company {
   id          Int           @id @default(autoincrement())
-  name        String
-  password    String
+  companyName        String
+  companyFantasyName        String
+  cnpj        String
+  address    String
+  city       String
+  state      String
   email       String
+  phone      String
 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-
-  companyId  Int
 
   user   User[]
 
